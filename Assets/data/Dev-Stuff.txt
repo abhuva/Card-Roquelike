@@ -1,0 +1,3 @@
+1) when AI have other target than player AND other AIs get killed this leads to problems with the target cause currently it
+only stores the position in the AI-List, and this gets changed
+A potential fix is to use real iDs

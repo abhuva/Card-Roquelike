@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MapGenSetCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MapGenSets>
+    <MapGenSet description="Our first Quest">
+      <iD>Cave Normal</iD>
+      <rule>
+        <string>ClearMap:1</string>
+        <string>Save2:0</string>
+        <string>WhiteNoise:48</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>Save2:1</string>
+
+        <string>WhiteNoise:48</string>
+        <string>PlaceBounds:12</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>FloodFillLargestArea</string>
+        <string>FillHoles</string>
+        <string>Save2:2</string>
+        <string>MoveMap:2</string>
+      </rule>
+    </MapGenSet>
+    <MapGenSet description="Our first Quest">
+      <iD>Circular Cave</iD>
+      <rule>
+        <string>ClearMap:1</string>
+        <string>Save2:0</string>
+        <string>Drunkyard:47</string>
+        <string>CellAuto:0:2:2</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>Save2:1</string>
+        <string>CircleNoise:19</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>FloodFillLargestArea</string>
+        <string>FillHoles</string>
+        <string>Save2:2</string>
+        <string>MoveMap:2</string>
+      </rule>
+    </MapGenSet>
+    <MapGenSet description="Our first Quest">
+      <iD>Smoothed Drunkyard</iD>
+      <rule>
+        <string>ClearMap:1</string>
+        <string>Save2:0</string>
+        <string>Drunkyard:40</string>
+        <string>PlaceBounds:5</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1</string>
+        <string>FloodFillLargestArea</string>
+        <string>FillHoles</string>
+        <string>Save2:2</string>
+        <string>MoveMap:2</string>
+      </rule>
+    </MapGenSet>
+    <MapGenSet description="Simple Dungeon Room Layout">
+      <iD>Dungeon Rooms 01</iD>
+      <rule>
+        <string>ClearMap:1</string>
+        <string>Save2:0</string>
+        <string>RoomBuilder:4:15:100</string>
+        <string>Save2:2</string>
+        <string>MoveMap:2</string>
+      </rule>
+    </MapGenSet>
+  </MapGenSets>
+</MapGenSetCollection>

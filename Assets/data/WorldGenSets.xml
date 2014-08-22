@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorldGenSetCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <WorldGenSets>
+    <WorldGenSet description="Simple Dungeon">
+      <iD>SimpleDungeon01</iD>
+      <mapGenID>Dungeon Rooms 01</mapGenID>
+      <tileRuleSetID>
+        <string>0:4</string>
+        <string>1:1</string>
+        <string>2:3</string>
+      </tileRuleSetID>
+    </WorldGenSet>
+    <WorldGenSet description="Simple Cave">
+      <iD>SimpleCave01</iD>
+      <mapGenID>Cave Normal</mapGenID>
+      <tileRuleSetID>
+        <string>0:7</string>
+        <string>1:6</string>
+        <string>2:5</string>
+      </tileRuleSetID>
+    </WorldGenSet>
+  </WorldGenSets>
+</WorldGenSetCollection>

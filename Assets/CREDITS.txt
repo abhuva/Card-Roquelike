@@ -1,0 +1,4 @@
+All contents of Sources directory from Unity 3D Procedural package except:
+- Artwork/ridge bump, Artwork/ridge tex, Artwork/tex, Artwork/text normal, Artwork/text spec from Libnoise-dotnet
+- sounds/48544__flick3r__rezzo-4.wav from http://www.freesound.org/people/Flick3r/sounds/48544/ under Common Creative licence
+
