@@ -28,7 +28,7 @@ function MeleeCombat (opp1 : AIDataClass, opp2 : AIDataClass) {
 		opp2.life -= damage;
 		MD.statusText = opp1.name + " hit " + opp2.name +" for "+ damage + " HP" + "\n"+ MD.statusText;
 	} else {
-		MD.statusText = opp2.name + " evaded " + opp1.name +"'s Attack\n"+ MD.statusText;
+		MD.statusText = "<color=red>"+opp2.name + " evaded " + opp1.name +"'s Attack</color>\n"+ MD.statusText;
 	}
 	//Debug.Log(opp1.name + " is attacking " + opp2.name);
 }

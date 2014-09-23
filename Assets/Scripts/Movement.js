@@ -1,9 +1,11 @@
-﻿#pragma strict
+﻿import UnityEngine.EventSystems;
+#pragma strict
 
 	 var MD : MainData;			// we use those to reference our MainData script wich holds all important datastructures
 	private var gameData : GameObject;
-	 var TM : TilesUV;
-	 var TM2: TilesUV;
+	 var TM : TilesUV;  // the background layer
+	 var TM2: TilesUV;  // the char layer
+	 var TM3: TilesUV;  // the detail layer
 	 var FV : FOV;
 	 var MC : MapCreation;
 	 var AM : AIManager;
@@ -28,6 +30,8 @@
 
 var oneStep : boolean = true;
 private var cB : int;
+		var eS : UnityEngine.EventSystems.EventSystem;
+
 function GameRunningUpdate() {
 	if (turnState == 0) {
 		while (turnState == 0) {
@@ -119,10 +123,19 @@ function GameRunningUpdate() {
 				AM.AIDataList[0].time += AM.AIDataList[0].speed;
 				turnState = 0;
 			
-		} 
+		}
+		
+		// check for new uGUI clicks
+		//using UnityEngine.EventSystems;
+
+ 
+       
+       
+ 
+    //}
 		var ray : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		var hit : RaycastHit;
-		if ((Physics.Raycast (ray, hit, 100.0)) && Input.GetMouseButtonDown(0)) {
+		if ((Physics.Raycast (ray, hit, 100.0)) && Input.GetMouseButtonDown(0) && !eS.IsPointerOverGameObject()) {
 			var pos : int = Mathf.Floor(hit.triangleIndex / 2);
 			var x : int = pos % MD.maxX;
 			var y : int = (pos - x) / MD.maxX;
@@ -171,6 +184,7 @@ function CheckBlocked(x : int, y : int) : int {
 	return blocked;
 }
 
+// here we map the worldmap to our ingame map
 function UpdateMap () {
 	for (var x = 0; x < 25; x++) {
 		for (var y = 0; y < 25; y++) {
@@ -178,13 +192,16 @@ function UpdateMap () {
 			var cY : int = y+AM.AIDataList[0].position.y-13 + 1;
 			if ((cX > 0) && (cX < MD.maxXWorld-1) && (cY > 0) && (cY < MD.maxYWorld-1)) {
 				MD.map[x,y] = MD.mapWorld[cX,cY];
+				MD.detail[x,y] = MD.mapDetail[cX,cY];
 			} else { 
-				MD.map[x,y] = 2;
+				MD.map[x,y] = 2; // ATTENTION - this needs to be fixed
+				MD.detail[x,y] = 2;
 			}
 		}
 	}
-	MC.VisualizeMiniMapAsTexture();
+	MC.VisualizeMiniMapAsGUITexture();
 	FV.UpdateAllFOV();
 	TM.ReMap2Background();
 	TM2.ReMap2Chars();
+	TM3.ReMap2Detail();
 }

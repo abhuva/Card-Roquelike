@@ -1,74 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <MapGenSetCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <MapGenSets>
     <MapGenSet description="Our first Quest">
       <iD>Cave Normal</iD>
       <rule>
-        <string>ClearMap:1</string>
-        <string>Save2:0</string>
+        <string>InitMap</string>
         <string>WhiteNoise:48</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>Save2:1</string>
-
+        <string>CellAuto:5:30:1:11</string>
+        <string>SaveWorld:1</string>
         <string>WhiteNoise:48</string>
+        <string>CopyAll:0</string>
         <string>PlaceBounds:12</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
+        <string>CopyAll:1</string>
+        <string>CellAuto:5:30:1:11</string>
         <string>FloodFillLargestArea</string>
         <string>FillHoles</string>
-        <string>Save2:2</string>
-        <string>MoveMap:2</string>
+        <string>SaveWorld:2</string>
+        <string>MoveMap:1</string>
       </rule>
     </MapGenSet>
     <MapGenSet description="Our first Quest">
       <iD>Circular Cave</iD>
       <rule>
+      	<string>InitMap</string>
         <string>ClearMap:1</string>
-        <string>Save2:0</string>
+        <string>SaveWorld:0</string>
         <string>Drunkyard:47</string>
-        <string>CellAuto:0:2:2</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>Save2:1</string>
+        <string>CellAuto:0:2:2:1</string>
+        <string>CellAuto:5:30:1:8</string>
+        <string>SaveWorld:1</string>
         <string>CircleNoise:19</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1:10</string>
         <string>FloodFillLargestArea</string>
         <string>FillHoles</string>
-        <string>Save2:2</string>
+        <string>SaveWorld:2</string>
         <string>MoveMap:2</string>
       </rule>
     </MapGenSet>
@@ -76,28 +41,123 @@
       <iD>Smoothed Drunkyard</iD>
       <rule>
         <string>ClearMap:1</string>
-        <string>Save2:0</string>
+        <string>SaveWorld:0</string>
         <string>Drunkyard:40</string>
         <string>PlaceBounds:5</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
-        <string>CellAuto:5:30:1</string>
+        <string>CellAuto:5:30:1:5</string>
         <string>FloodFillLargestArea</string>
         <string>FillHoles</string>
-        <string>Save2:2</string>
+        <string>SaveWorld:2</string>
         <string>MoveMap:2</string>
       </rule>
     </MapGenSet>
     <MapGenSet description="Simple Dungeon Room Layout">
       <iD>Dungeon Rooms 01</iD>
       <rule>
+        <string>InitMap</string>
         <string>ClearMap:1</string>
-        <string>Save2:0</string>
+        <string>SaveWorld:0</string>
         <string>RoomBuilder:4:15:100</string>
-        <string>Save2:2</string>
+        <string>SaveWorld:2</string>
         <string>MoveMap:2</string>
+        <string>MaskMap:0</string>
+        <string>ClearMap:1</string>
+        <string>SaveDetail:3</string>
+        <string>UseMask:true</string>
+        <string>WhiteNoise:1</string>
+        <string>SaveDetail:4</string>
+        <string>WhiteNoise:1</string>
+        <string>SaveDetail:5</string>
+      </rule>
+    </MapGenSet>
+    <MapGenSet description="Our first Quest">
+      <iD>Dungeon Rooms 02</iD>
+      <rule>
+        <string>InitMap</string>
+        <string>CopyAll:1</string>
+        <string>Map2Use:0</string>
+        <string>ClearMap:1</string>
+        <string>SaveWorld:0</string>
+        <string>RoomBuilder:3:8:400</string>
+        <string>CellAuto:0:0:0:1</string>
+        <string>CellAuto:0:0:1:1</string>
+        <string>CopyAll:0</string>
+        <string>PlaceBounds:5</string>
+        <string>CopyAll:1</string>
+        <string>FloodFillLargestArea</string>
+        <string>FillHoles</string>
+        <string>SaveWorld:2</string>
+        <string>MoveMap:1</string>
+        <string>MaskMap:0</string>
+        <string>ClearMap:1</string>
+        <string>SaveDetail:3</string>
+        <string>UseMask:true</string>
+        <string>WhiteNoise:1</string>
+        <string>SaveDetail:4</string>
+        <string>WhiteNoise:1</string>
+        <string>SaveDetail:5</string>
+      </rule>
+    </MapGenSet>
+    <MapGenSet description="Our first Quest">
+      <iD>Circular Cave with Details</iD>
+      <rule>
+        <string>InitMap</string>
+        <string>SaveDetail:4</string>
+        <string>Drunkyard:48</string>
+        <string>CellAuto:5:30:1:8</string>
+        <string>MaskMap:1</string>
+        <string>SaveWorld:1</string>
+        <string>UseMask:true</string>
+        <string>WhiteNoise:48</string>
+        <string>CellAuto:5:30:1:8</string>
+        <string>SaveWorld:2</string>
+        <string>MaskMap:1</string>
+        <string>WhiteNoise:48</string>
+        <string>CellAuto:5:30:1:8</string>
+        <string>SaveDetail:4</string>
+        <string>UseMask:false</string>
+        <string>CircleNoise:26</string>
+        <string>CellAuto:5:30:1:8</string>
+        <string>FloodFillLargestArea</string>
+        <string>FillHoles</string>
+        <string>SaveWorld:3</string>
+        <string>MoveMap:1</string>
+        <string>UseMask:true</string>
+        <string>WhiteNoise:55</string>
+        <string>CellAuto:5:30:1:8</string>
+        <string>SaveDetail:4</string>
+      </rule>
+    </MapGenSet>
+    <MapGenSet description="">
+      <iD>ForestTest</iD>
+      <rule>
+        <string>InitMap</string>
+        <string>CopyAll:1</string>
+        <string>Map2Use:0</string>
+        <string>ClearMap:1</string>
+        <string>SaveWorld:0</string>
+        <string>SaveDetail:4</string>
+        <string>CircleNoise:26</string>
+        <string>CellAuto:5:9:1:5</string>
+        <string>FloodFillLargestArea</string>
+        <string>FillHoles</string>
+        <string>SaveWorld:1</string>
+        <string>MoveMap:1</string>
+        <string>MaskMap:0</string>
+        <string>UseMask:true</string>
+        <string>WhiteNoise:3</string>
+        <string>SaveDetail:5</string>
+        <string>WhiteNoise:3</string>
+        <string>SaveDetail:6</string>
+        <string>WhiteNoise:48</string>
+        <string>CellAuto:5:9:1:5</string>
+        <string>SaveWorld:2</string>
+        <string>MaskMap:1</string>
+        
+        <string>WhiteNoise:48</string>
+        <string>CellAuto:5:9:1:5</string>
+        <string>SaveDetail:3</string>
+        
       </rule>
     </MapGenSet>
   </MapGenSets>

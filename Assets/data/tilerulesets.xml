@@ -86,6 +86,11 @@
       <iD>5</iD>
       <rule>
         <string>WWFWWWWWW:62</string>
+        <string>FFFFWFFFF:68</string>
+        <string>*W*FWFFFF:67</string>
+        <string>*FFWWF*FF:63</string>
+        <string>FF*FWWFF*:63</string>
+        <string>FFFFWF*W*:68</string>
         <string>*WWFWWFF*:62</string>
         <string>WWWWWWWWW:13</string>
         <string>*WWFWW*WW:67</string>
@@ -133,13 +138,43 @@
         <string>*W*FWF*W*:54</string>
         <string>*W*WW****:48</string>
         <string>***WWW***:47</string>
-        <string>*********:14</string>
+        <string>*********:16</string>
       </rule>
     </TileRuleSet>
     <TileRuleSet description="Mine Floor Simple 01">
       <iD>7</iD>
       <rule>
         <string>*********:75</string>
+      </rule>
+    </TileRuleSet>
+    <TileRuleSet description="Transparent">
+      <iD>8</iD>
+      <rule>
+        <string>*********:76</string>
+      </rule>
+    </TileRuleSet>
+    <TileRuleSet description="Detail Bottle 01">
+      <iD>9</iD>
+      <rule>
+        <string>*********:77</string>
+      </rule>
+    </TileRuleSet>
+    <TileRuleSet description="Detail Stone 01">
+      <iD>10</iD>
+      <rule>
+        <string>*********:78</string>
+      </rule>
+    </TileRuleSet>
+    <TileRuleSet description="Detail Stone 02">
+      <iD>11</iD>
+      <rule>
+        <string>*********:79</string>
+      </rule>
+    </TileRuleSet>
+    <TileRuleSet description="Detail - Tree 01">
+      <iD>12</iD>
+      <rule>
+        <string>*********:83</string>
       </rule>
     </TileRuleSet>
   </TileRuleSets>

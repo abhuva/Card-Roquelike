@@ -3,20 +3,27 @@
   <WorldGenSets>
     <WorldGenSet description="Simple Dungeon">
       <iD>SimpleDungeon01</iD>
-      <mapGenID>Dungeon Rooms 01</mapGenID>
+      <mapGenID>Dungeon Rooms 02</mapGenID>
       <tileRuleSetID>
         <string>0:4</string>
         <string>1:1</string>
         <string>2:3</string>
+       	<string>3:8</string>
+       	<string>4:9</string>
+       	<string>5:10</string>
       </tileRuleSetID>
     </WorldGenSet>
     <WorldGenSet description="Simple Cave">
       <iD>SimpleCave01</iD>
-      <mapGenID>Cave Normal</mapGenID>
+      <mapGenID>ForestTest</mapGenID>
       <tileRuleSetID>
         <string>0:7</string>
-        <string>1:6</string>
-        <string>2:5</string>
+        <string>1:5</string>
+        <string>2:6</string>
+        <string>3:12</string>
+        <string>4:8</string>
+        <string>5:11</string>
+        <string>6:10</string>
       </tileRuleSetID>
     </WorldGenSet>
   </WorldGenSets>

@@ -16,6 +16,7 @@ var MO : Movement;
 		public var iD				: String;
 		public var mapGenID			: String;   // which map generator to use
 		public var tileRuleSetID	: String[];   // wich tileRuleSets to use, each entry specifies a ruleset for that number
+		public var detailRuleSetID  : String[];  // wich tileRuleSets to use for the detail map
 	}
 	
 	@XmlRoot("WorldGenSetCollection")
@@ -49,7 +50,7 @@ var MO : Movement;
  
 	public var container : WorldGenSetContainer;
 	private var path : String;
-	public var XMLObject : TextAsset;	// incase we want to include the xml in the build we assign it to this variable in the inspector, use readNamesTxt() to initialize then
+	public var XMLWorldGen : TextAsset;	// incase we want to include the xml in the build we assign it to this variable in the inspector, use readNamesTxt() to initialize then
 
 	// *****************************************************************************************************
 // Below this comes the XML handling scripts (loading, writing, getting the iD position etc..)
@@ -75,8 +76,8 @@ var MO : Movement;
 	}
  
 	// reads the xml defined in XMLObject, used if we want to include the xml in the build
-	function readNamesTxt () {
-		var xml : StringReader = new StringReader(XMLObject.text);
+	function readWorldGenTxt () {
+		var xml : StringReader = new StringReader(XMLWorldGen.text);
 		container = WorldGenSetContainer.LoadFromText(xml);
 	}
  
@@ -103,6 +104,7 @@ var MO : Movement;
 		
 	function Generator(worldGenID : int, noGame : boolean) {
 		// first we get the info from WorldGenSets.xml
+		MD.gameState = 0;
 		var wGS : WorldGenSet = new WorldGenSet();
 		wGS = container.WorldGenSets[worldGenID];
 		// now we search the generator rules in MapGenSets.xml and load them
@@ -138,6 +140,24 @@ var MO : Movement;
 			}
 		}
 		
+		// the same for the detail map
+		for (x=0; x < MC.maxX; x++) {
+			for (y=0; y < MC.maxY; y++) {
+				// first we get the number
+				 number = MD.mapDetail[x,y];
+				// we search the according number in the ruleset in WorldGenSets
+				for (i = 0; i < wGS.tileRuleSetID.length; i++) {
+					 cRule = wGS.tileRuleSetID[i];
+					words1 = cRule.Split(":"[0]);  // we seperate the parts (rule part and position parts)
+					 foundID1  = int.Parse(words1[0]);
+					 foundID2  = int.Parse(words1[1]);
+					if (foundID1 == number) break;
+				}
+				// we have our new ID in foundID2 now and write this to the map
+				MD.mapDetail[x,y] = foundID2;
+			}
+		}
+		
 		// now we create the texture atlas
 		AC.AtlasCreation();
 		// we position the player
@@ -156,7 +176,7 @@ var MO : Movement;
 			if (noGame == false) AM.InitAI();
 			MO.UpdateMap();
 			if (noGame == false) {
-				MC.VisualizeMapAsTexture();
+				MC.VisualizeMapAsTexture(MD.mapWorld);
 				MO.turnState = 1;
 				//showSets = false;
 				MD.gameState = 1;
@@ -189,7 +209,22 @@ var MO : Movement;
 				MD.mapWorld[x,y] = foundID2;
 			}
 		}
-		Debug.Log (MC.maxX + " " + MC.maxY);
+		// the same for the detail map
+		for (x=0; x < MC.maxX; x++) {
+			for (y=0; y < MC.maxY; y++) {
+				 number = MD.mapDetail[x,y];
+				for (i = 0; i < wGS.tileRuleSetID.length; i++) {
+					 cRule = wGS.tileRuleSetID[i];
+					words1 = cRule.Split(":"[0]);  // we seperate the parts (rule part and position parts)
+					 foundID1  = int.Parse(words1[0]);
+					 foundID2  = int.Parse(words1[1]);
+					if (foundID1 == number) break;
+				}
+				MD.mapDetail[x,y] = foundID2;
+			}
+		}
+		
+		//Debug.Log (MC.maxX + " " + MC.maxY);
 		AC.AtlasCreation();
 		// We have the map stored in MD.mapWorld and created the atlas texture, now we just need to draw the whole map to texture
 		var tex = new Texture2D (4096, 4096, TextureFormat.RGB24, false);
@@ -197,12 +232,20 @@ var MO : Movement;
 			for (y = 0; y < MC.maxY; y++) {
 				// for each tile in the map we do the following:
 				var tileID : int = MD.mapWorld[x,y];
+				var detailTileID : int = MD.mapDetail[x,y];
+				
 				var uvDataPos : int;
+				var uvDataPosDetail : int;
 				for ( i = 0; i < MD.uvInfo.Count; i++) { 
 					if (MD.uvInfo[i] == tileID) {uvDataPos = i; break;}
 				}
+				for ( i = 0; i < MD.uvInfo.Count; i++) { 
+					if (MD.uvInfo[i] == detailTileID) {uvDataPosDetail = i; break;}
+				}
 				var r : int;
 				var c : int;
+				var r1:int;
+				var c1:int;
 				var x1 : int;
 				var y1 : int;
 				var spriteX : int = 16;
@@ -210,13 +253,20 @@ var MO : Movement;
 				var col : Color;
 				r = MD.uvData[uvDataPos].row;
 				c = MD.uvData[uvDataPos].column;
+				r1 = MD.uvData[uvDataPosDetail].row;
+				c1 = MD.uvData[uvDataPosDetail].column;
 				// the texture is in AC.atlas
 				for (x1 = 0; x1 < spriteX; x1++) {
 					for (y1 = 0; y1 < spriteY; y1++) {
 						col = AC.atlas.GetPixel(spriteX*r + x1,spriteY*c+y1);
 						tex.SetPixel(x1+spriteX*x, y1+spriteY*y,col);
+						col = AC.atlas.GetPixel(spriteX*r1 + x1, spriteY*c1+y1); // the detail sprite
+						if (col.a > 0) {
+							tex.SetPixel(x1+spriteX*x, y1+spriteY*y,col);
+						}
 					}
 				}
+				
 			}
 		}
 		tex.Apply();
@@ -229,5 +279,6 @@ var MO : Movement;
 	}
 	
 	function Start() {
-		readMapWorldSets();
+		readWorldGenTxt();
+		//readMapWorldSets();
 	}

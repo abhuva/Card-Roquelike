@@ -457,5 +457,89 @@
       <row>21</row>
       <column>44</column>
     </UVRuleSet>
+    <UVRuleSet description="Transparent">
+      <iD>76</iD>
+      <fileName>WallFloor</fileName>
+      <row>5</row>
+      <column>63</column>
+    </UVRuleSet>
+    <UVRuleSet description="Detail - Bottle 01">
+      <iD>77</iD>
+      <fileName>Details</fileName>
+      <row>0</row>
+      <column>60</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details Stone 01">
+      <iD>78</iD>
+      <fileName>Details</fileName>
+      <row>14</row>
+      <column>63</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details Stone 02">
+      <iD>79</iD>
+      <fileName>Details</fileName>
+      <row>15</row>
+      <column>63</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 1">
+      <iD>80</iD>
+      <fileName>Details</fileName>
+      <row>0</row>
+      <column>41</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 2">
+      <iD>81</iD>
+      <fileName>Details</fileName>
+      <row>1</row>
+      <column>41</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 3">
+      <iD>82</iD>
+      <fileName>Details</fileName>
+      <row>2</row>
+      <column>41</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 4">
+      <iD>83</iD>
+      <fileName>Details</fileName>
+      <row>3</row>
+      <column>41</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 5">
+      <iD>84</iD>
+      <fileName>Details</fileName>
+      <row>0</row>
+      <column>40</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 6">
+      <iD>85</iD>
+      <fileName>Details</fileName>
+      <row>1</row>
+      <column>40</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 7">
+      <iD>86</iD>
+      <fileName>Details</fileName>
+      <row>2</row>
+      <column>40</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 8">
+      <iD>87</iD>
+      <fileName>Details</fileName>
+      <row>0</row>
+      <column>39</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 9">
+      <iD>88</iD>
+      <fileName>Details</fileName>
+      <row>1</row>
+      <column>39</column>
+    </UVRuleSet>
+    <UVRuleSet description="Details - Tree 01 - 10">
+      <iD>89</iD>
+      <fileName>Details</fileName>
+      <row>2</row>
+      <column>39</column>
+    </UVRuleSet>
   </UVRuleSets>
 </UVRuleSetCollection>

@@ -1,8 +1,10 @@
 ﻿#pragma strict
-
+var DevVersion : boolean;
 public var maxX : int; // the width of the map
 public var maxY : int; // the height of the map
 public var map : int[,];  // this holds our map we can see ingame
+public var detail : int[,]; // this holds the detail map we can see ingame
+
 public var mapWorld : int[,];	// the whole map (background)
 public var mapDetail: int[,];  // the detail map (foreground)
 public var mapMove : int[,];	// the movement map
@@ -28,32 +30,27 @@ class uvDataClass  {
 }
 var uvData : uvDataClass[];		// uv-information for background tiles of the world-map
 
-function InitUVData() {
-	uvData = new uvDataClass[6];
-	for (var i = 0; i < 6; i++) { uvData[i] = new uvDataClass();}
-	uvData[0].row = 10;
-	uvData[0].column = 30;
-	uvData[1].row = 10;
-	uvData[1].column = 29;
-	uvData[2].row = 10;
-	uvData[2].column = 28;
-	uvData[3].row = 12;
-	uvData[3].column = 30;
-	uvData[4].row = 12;
-	uvData[4].column = 29;
-	uvData[5].row = 12;
-	uvData[5].column = 28;
-}
+//function InitUVData() {
+//	uvData = new uvDataClass[6];
+//	for (var i = 0; i < 6; i++) { uvData[i] = new uvDataClass();}
+//	uvData[0].row = 10;
+//	uvData[0].column = 30;
+//	uvData[1].row = 10;
+//	uvData[1].column = 29;
+//	uvData[2].row = 10;
+//	uvData[3].row = 12;
+//	uvData[3].column = 30;
+//	uvData[4].row = 12;
+//	uvData[4].column = 29;
+//	uvData[5].row = 12;
+//	uvData[5].column = 28;
+//}
 
 function Awake () {
-	InitUVData();
+	//InitUVData();
 	mapWorld = new int[maxXWorld,maxYWorld];
 	mapDetail = new int[maxXWorld, maxYWorld];
 	map = new int[maxX,maxY];
-	//for (var x = 0; x < maxXWorld; x++) {
-	//	for (var y = 0; y < maxYWorld; y++) {
-	//		mapWorld[x,y] = Random.Range(0,3);
-	//	}
-	//}
+	detail = new int[maxX,maxY];
 	viewMap = new byte[maxX, maxY];
 }

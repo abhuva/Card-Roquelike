@@ -4,12 +4,23 @@ var TUV : TilesUV;
 var ViewSpace : GameObject;
 var ViewSpace2 : GameObject;
 var ViewSpace3 : GameObject;
+var ViewMap1 : GameObject;
 var AC : AtlasCreation;
-var MC : MapCreation;
+var MC : MapCreation;	// visualizing map
+var MC1: MapCreation;	// visualizing map1
+var MC2: MapCreation;  	// used for visualizing the mask map
+var MC3: MapCreation;   // used for visualizing worldmap
+var MC4: MapCreation;   // visualizing detail map
+var MC5: MapCreation;   // visualizing move map
 var WG : WorldGeneration;
 
 var posX : int;
 var posY : int;
+
+private var m1 : int;
+private var m2 : int;
+private var m3 : int;
+	
 private var selectionGridInt : int = 0;
 private var selectionStrings : String[] = ["Grid 1", "Grid 2", "Grid 3", "Grid 4"];
 private var selectionGridInt2 : int = 0;
@@ -54,10 +65,12 @@ private	var showSets : boolean = false;
 	
 private var iDSave : int;
 private var innerText : String = "";
-private var crule1 : int;
-private var crule2 : int;
-private var crange : int;
+private var crule1 : int;	// cellular automata rule1
+private var crule2 : int;	// cellular automata rule2
+private var crange : int;	// cellular automata range
+private var camount : int;	// cellular automata amount
 private var width : int;
+private var cM2U : int;  // current map to use; used in devgui
 
 function UpdateRulesList(){
 	selectionStrings = new String[AC.UVcontainer.UVRuleSets.Count];
@@ -110,13 +123,23 @@ function UpdateWorldGenList() {
 	}
 }
 
+function LoadMapGen(iD:int){
+	MC.algoList.Clear();
+	for (var i = 0; i < MC.container.MapGenSets[iD].rule.length; i++) {
+		MC.algoList.Add(MC.container.MapGenSets[iD].rule[i]);
+	}
+}
 
 function OnGUI () {
 		if (state == 0) {
 			ViewSpace3.renderer.enabled = false;
 			ViewSpace2.renderer.enabled = false;
 			ViewSpace.renderer.enabled = false;
-		
+			UpdateMapGenList();
+			scrollViewVector2 = GUI.BeginScrollView (Rect (200, 60, 200, 200), scrollViewVector2, Rect (0, 0, 180, 30+selectionStrings2.length*30));
+    			selectionGridInt2 = GUI.SelectionGrid (Rect (5, 5, 180, selectionStrings2.length*30), selectionGridInt2, selectionStrings2, 1);
+   			GUI.EndScrollView();
+			
 			if (GUI.Button (Rect(0,0,100,30), "UV Info") ) {
 				ViewSpace3.renderer.enabled = false;
 				ViewSpace2.renderer.enabled = false;
@@ -141,6 +164,7 @@ function OnGUI () {
 				state = 3;
 			}
 			if (GUI.Button (Rect(300,0,100,30), "Map Gen") ) {
+				LoadMapGen(selectionGridInt2);
 				ViewSpace3.renderer.enabled = false;
 				ViewSpace2.renderer.enabled = false;
 				ViewSpace.renderer.enabled = true;
@@ -149,7 +173,7 @@ function OnGUI () {
 				state = 4;
 			}
 			if (GUI.Button (Rect(400,0,100,30), "Render Map") ) {
-				WG.Generator2Texture(0);
+				WG.Generator2Texture(1);
 			}
 			
 		} else if (state == 1) {
@@ -357,52 +381,100 @@ function UpdateAlgoList() {
 	}
 }	
 
+function VisTex() {
+	MC.VisualizeMapAsTexture(MC.map);
+	MC1.VisualizeMapAsTexture(MC.map1);
+	MC2.VisualizeMapAsTexture(MC.mapMask);
+	MC3.VisualizeMapAsTexture(MD.mapWorld);
+	MC4.VisualizeMapAsTexture(MD.mapDetail);
+	MC5.VisualizeMapAsTexture(MD.mapMove);
+}
+
+var cDescription : String;
+var sVVDesc : Vector2;
+var algoListGrid : String[];
+
+function UpdateAlgoListGrid() {
+	algoListGrid = new String[MC.algoList.Count]; 
+	for (var i : int = 0; i < MC.algoList.Count; i++) {
+		algoListGrid[i] = MC.algoList[i];
+	}
+}
+
 function MapGenGUI () {
 // first the initializer
-	orthSize3= GUI.HorizontalSlider (Rect (0, 630, 100, 20), orthSize3, 1, 20);
-	posX3= GUI.HorizontalSlider (Rect (0, 600, 100, 20), posX3, -10, 10);
-	posZ3= GUI.HorizontalSlider (Rect (100, 600, 100, 20), posZ3, -10, 10);
+	orthSize3= GUI.HorizontalSlider (Rect (0, 430, 100, 20), orthSize3, 1, 60);
+	posX3= GUI.HorizontalSlider (Rect (0, 400, 100, 20), posX3, -20, 10);
+	posZ3= GUI.HorizontalSlider (Rect (100, 400, 100, 20), posZ3, -20, 10);
 	Camera.main.orthographicSize = orthSize3;
 	Camera.main.transform.position.x = posX3;
 	Camera.main.transform.position.z = posZ3;
 		
-		
-    scrollViewVector = GUI.BeginScrollView (Rect (575, 25, 200, 200), scrollViewVector, Rect (0, 0, 400, 16*MC.algoList.Count+20));
-    	innerText = GUI.TextArea (Rect (0, 0, 400, 16*MC.algoList.Count+20), innerText);
+	 
+	
+	UpdateAlgoListGrid();
+    scrollViewVector = GUI.BeginScrollView (Rect (575, 25, 200, 200), scrollViewVector, Rect (0, 0, 200, MC.algoList.Count*30));
+    		selectionGridInt = GUI.SelectionGrid (Rect (5, 5, 180, MC.algoList.Count*30), selectionGridInt, algoListGrid, 1);
+//    	innerText = GUI.TextArea (Rect (0, 0, 400, 16*MC.algoList.Count+20), innerText);
     GUI.EndScrollView();
+    
+    // description text
+    sVVDesc = GUI.BeginScrollView (Rect (575, 325, 200, 200), sVVDesc, Rect (0, 0, 400, 220));
+    	cDescription = GUI.TextArea (Rect (0, 0, 400, 100), cDescription);
+    GUI.EndScrollView();
+    
     if (GUI.Button ( Rect ( 575,240,100,30), "Delete Last")) {
 			MC.algoList.RemoveAt(MC.algoList.Count-1);
 			UpdateAlgoList();
 	}
+	if (GUI.Button ( Rect ( 575,270,100,30), "Generate")) {
+		MC.GenerateWorld();
+		VisTex();
+	}
 	
-	if (GUI.Button ( Rect ( 200,240,100,30), "Save 2")) {
-		for ( var x=0;x<MC.maxX;x++) {
-			for ( var y=0;y<MC.maxY;y++) {
-				if (MC.map[x,y] == 1) MD.mapWorld[x,y] = iDSave;
-			}
-		}
-		MC.algoList.Add("Save2:"+iDSave);
+	if (GUI.Button ( Rect ( 200,150,100,30), "Save World")) {
+		MC.SaveWorldMap(iDSave);
+		//for ( var x=0;x<MC.maxX;x++) {
+		//	for ( var y=0;y<MC.maxY;y++) {
+		//		if (MC.map[x,y] == 1) MD.mapWorld[x,y] = iDSave;
+		//	}
+		//}
+		VisTex();
+		MC.algoList.Add("SaveWorld:"+iDSave);
 		UpdateAlgoList();
 	}
-	GUI.Label (Rect(300,240,100,30), "iDSave :"+iDSave);
-	iDSave = GUI.HorizontalSlider (Rect (300, 240, 100, 20), iDSave, 0, 20);
+	if (GUI.Button ( Rect ( 300,150,100,30), "Save Detail")) {
+		MC.SaveDetailMap(iDSave);
+		//for ( var x=0;x<MC.maxX;x++) {
+		//	for ( var y=0;y<MC.maxY;y++) {
+		//		if (MC.map[x,y] == 1) MD.mapWorld[x,y] = iDSave;
+		//	}
+		//}
+		VisTex();
+		MC.algoList.Add("SaveDetail:"+iDSave);
+		UpdateAlgoList();
+	}
+	GUI.Label (Rect(400,160,100,30), "iDSave :"+iDSave);
+	iDSave = GUI.HorizontalSlider (Rect (400, 150, 100, 20), iDSave, 0, 20);
 
 if (GUI.Button( Rect(200,000,100,30), "Perlin Noise") ) {
 		MC.CalcNoise();
-		MC.VisualizeMapAsTexture();
+		VisTex();
+		
 		MC.algoList.Add("Perlin:"+MC.fillProbability);
 		UpdateAlgoList();
 	}
 	if (GUI.Button( Rect(0,0,100,30), "White Noise") ) {
 		MC.InitMap1();
-		MC.VisualizeMapAsTexture();
+		VisTex();
+
 		percW = MC.AnalyzeMap();
 		MC.algoList.Add("WhiteNoise:"+MC.fillProbability);
 		UpdateAlgoList();
 	}
 	if (GUI.Button( Rect(100,0,100,30), "Circle Noise") ) {
 		MC.InitMap();
-		MC.VisualizeMapAsTexture();
+		VisTex();
 		percW = MC.AnalyzeMap();
 		MC.algoList.Add("CircleNoise:"+MC.fillProbability);
 		UpdateAlgoList();
@@ -418,7 +490,7 @@ if (GUI.Button( Rect(200,000,100,30), "Perlin Noise") ) {
 		MC.fillPercentage = MC.fillProbability;
 		if (MC.fillPercentage > 99) MC.fillPercentage = 99; // to prevent endless loops
 		MC.DrunkyardWalk();
-		MC.VisualizeMapAsTexture();
+		VisTex();
 		percW = MC.AnalyzeMap();
 		MC.algoList.Add("Drunkyard:"+MC.fillPercentage);
 		UpdateAlgoList();
@@ -427,24 +499,28 @@ if (GUI.Button( Rect(200,000,100,30), "Perlin Noise") ) {
 	// Rule 5 Cellular Automata
 	
 	if (GUI.Button( Rect(0,30,100,30), "CellAuto") ) {
-		MC.CellularAutomata(crule1,crule2,crange);
-		MC.VisualizeMapAsTexture();
+		MC.CellularAutomata(crule1,crule2,crange,camount);
+		VisTex();
 		percW = MC.AnalyzeMap();
-		MC.algoList.Add("CellAuto:"+crule1+":"+crule2+":"+crange);
+		MC.algoList.Add("CellAuto:"+crule1+":"+crule2+":"+crange+":"+camount);
 		UpdateAlgoList();
 	}
-	GUI.Label (Rect(200,60,100,30), "Rule1 :"+crule1);
+	GUI.Label (Rect(200,40,100,30), "Rule1 :"+crule1);
 	crule1 = GUI.HorizontalSlider (Rect (200, 30, 100, 20), crule1, 0, 30);
 	
-	GUI.Label (Rect(300,60,100,30), "Rule2 :"+crule2);
+	GUI.Label (Rect(300,40,100,30), "Rule2 :"+crule2);
 	crule2= GUI.HorizontalSlider (Rect (300, 30, 100, 20), crule2, 0, 30);
 	
-	GUI.Label (Rect(400,60,100,30), "Range :"+crange);
-	crange= GUI.HorizontalSlider (Rect (400, 30, 100, 20), crange, 1, 2);
+	GUI.Label (Rect(400,40,100,30), "Range :"+crange);
+	crange= GUI.HorizontalSlider (Rect (400, 30, 100, 20), crange, 0, 2);
+	
+	GUI.Label (Rect(500,40,100,30), "Amount :"+camount);
+	camount= GUI.HorizontalSlider (Rect (500, 30, 100, 20), camount, 1, 20);
 	
 	// Repair the map, find connected parts etc..
-	if (GUI.Button( Rect(0,90,100,30), "FloodFill") ) {
-		
+	if (GUI.Button( Rect(0,60,100,30), "FloodFill") ) {
+		var x : int;
+		var y : int;
 		x = Random.Range(0,MC.maxX);
 		y = Random.Range(0,MC.maxY);
 		// cause we could get stuck here if no tile is marked as 0, we perform a check first 
@@ -455,60 +531,116 @@ if (GUI.Button( Rect(200,000,100,30), "Perlin Noise") ) {
 			}
 		
 			MC.FloodFill(x, y,0,2);
-			MC.VisualizeMapAsTexture();
+			VisTex();
 		}
 		MC.algoList.Add("FloodFill");
 		UpdateAlgoList();
 	}
-	if (GUI.Button( Rect(100,90,100,30), "Fill Holes") ) {
+	if (GUI.Button( Rect(100,60,100,30), "Fill Holes") ) {
 		MC.FillDisconnected();
-		MC.VisualizeMapAsTexture();
+		VisTex();
 		percW = MC.AnalyzeMap();
 		MC.algoList.Add("FillHoles");
 		UpdateAlgoList();
 	}
-	if (GUI.Button( Rect(200,90,200,30), "FloodFill Largest Area") ) {
+	if (GUI.Button( Rect(200,60,200,30), "FloodFill Largest Area") ) {
 		if (MC.AnalyzeMap() > 0.0) {
 			MC.FloodFill_LargestArea();
-			MC.VisualizeMapAsTexture();
+			VisTex();
 			percW = MC.AnalyzeMap();
 		}
 		MC.algoList.Add("FloodFillLargestArea");
 		UpdateAlgoList();
 	}
 	
-	if (GUI.Button( Rect(0,120,100,30), "Place Boundaries") ) {
+	if (GUI.Button( Rect(0,90,100,30), "Place Boundaries") ) {
 		MC.PlaceBoundaries(width);
-		MC.VisualizeMapAsTexture();
+		VisTex();
 		percW = MC.AnalyzeMap();
 		MC.algoList.Add("PlaceBounds:"+width);
 		UpdateAlgoList();
 	}
-	GUI.Label (Rect(400,150,100,30), "Width :"+width);
-	width= GUI.HorizontalSlider (Rect (400, 120, 100, 20), width, 1, 40);
+	GUI.Label (Rect(100,100,100,30), "Width :"+width);
+	width= GUI.HorizontalSlider (Rect (100, 90, 100, 20), width, 1, 40);
 	
 	if (GUI.Button( Rect(0,150,100,30), "Clear Map") ) {
 		MC.ClearMap(iDSave);
-		MC.VisualizeMapAsTexture();
+		VisTex();
 		percW = MC.AnalyzeMap();
 		MC.algoList.Add("ClearMap:"+iDSave);
 		UpdateAlgoList();
 	}
+	if (GUI.Button( Rect(0,250,100,30), "Init Map") ) {
+		MC.InitAllMaps();
+		VisTex();
+		MC.algoList.Add("InitMap");
+		UpdateAlgoList();
+	}
+	if (GUI.Button( Rect(100,150,100,30), "Mask Map") ) {
+		MC.MaskMap(iDSave);
+		
+		MC.algoList.Add("MaskMap:"+iDSave);
+		UpdateAlgoList();
+	}
+	if (GUI.Button( Rect(100,250,100,30), "Use Mask") ) {
+		if (MC.useMask == true) {
+			MC.algoList.Add("UseMask:false");
+			MC.useMask = false;
+		} else {
+			MC.algoList.Add("UseMask:true");
+			MC.useMask = true;
+		}
+		UpdateAlgoList();
+	}
 	
-	if (GUI.Button( Rect(0,180,100,30), "RoomBuilder") ) {
+	if (GUI.Button( Rect(0,120,100,30), "RoomBuilder") ) {
 		MC.RoomBuilderGenerator(MC.minRS,MC.maxRS,MC.numberRooms);
-		MC.VisualizeMapAsTexture();
+		VisTex();
 		percW = MC.AnalyzeMap();
 		MC.algoList.Add("RoomBuilder:"+MC.minRS+":"+MC.maxRS+":"+MC.numberRooms);
 		UpdateAlgoList();
 	}
-	GUI.Label (Rect(200,210,100,30), "Width :"+MC.minRS);
-	MC.minRS= GUI.HorizontalSlider (Rect (200, 180, 100, 20), MC.minRS, 3, 40);
-	GUI.Label (Rect(300,210,100,30), "Width :"+MC.maxRS);
-	MC.maxRS= GUI.HorizontalSlider (Rect (300, 180, 100, 20), MC.maxRS, 3, 40);
-	GUI.Label (Rect(400,210,100,30), "Width :"+MC.numberRooms);
-	MC.numberRooms= GUI.HorizontalSlider (Rect (400, 180, 100, 20), MC.numberRooms, 1, 200);
+	GUI.Label (Rect(100,130,100,30), "Min :"+MC.minRS);
+	MC.minRS= GUI.HorizontalSlider (Rect (100, 120, 100, 20), MC.minRS, 3, 40);
+	GUI.Label (Rect(200,130,100,30), "Max :"+MC.maxRS);
+	MC.maxRS= GUI.HorizontalSlider (Rect (200, 120, 100, 20), MC.maxRS, 3, 40);
+	GUI.Label (Rect(300,130,100,30), "Amount :"+MC.numberRooms);
+	MC.numberRooms= GUI.HorizontalSlider (Rect (300, 120, 200, 20), MC.numberRooms, 1, 400);
 	
+	// Combine Maps with Mask
+	
+	if (GUI.Button( Rect(0,220,100,30), "Comb Maps") ) {
+		MC.CombineMapsWithMask(m1,m2,m3);
+		VisTex();
+		MC.algoList.Add("CombMapsWithMask:"+m1+":"+m2+":"+m3);
+		UpdateAlgoList();
+	}
+	
+	GUI.Label (Rect(100,230,100,30), "Map1 :"+m1);
+	m1= GUI.HorizontalSlider (Rect (100, 220, 100, 20), m1, 0, 3);
+	GUI.Label (Rect(200,230,100,30), "Map2 :"+m2);
+	m2= GUI.HorizontalSlider (Rect (200, 220, 100, 20), m2, 0, 3);
+	GUI.Label (Rect(300,230,100,30), "Output :"+m3);
+	m3= GUI.HorizontalSlider (Rect (300, 220, 200, 20), m3, 0, 3);
+
+	
+	if (GUI.Button( Rect(0,180,100,30), "Map2Use") ) {
+		MC.map2use = cM2U;
+		MC.algoList.Add("Map2Use:"+MC.map2use);
+		UpdateAlgoList();
+	}
+	GUI.Label (Rect(200,190,100,30), "Map2Use :"+cM2U);
+	cM2U = GUI.HorizontalSlider (Rect (200, 180, 100, 20), cM2U, 0, 3);
+	
+	if (GUI.Button( Rect(100,180,100,30), "CopyAll") ) {
+		if (cM2U == 0) {
+			MC.copyAll = false;
+		} else {
+			MC.copyAll = true;
+		}
+		MC.algoList.Add("CopyAll:"+cM2U);
+		UpdateAlgoList();
+	}
 	if (GUI.Button( Rect(0,500,100,30), "Close Window") ) {
 		state = 0;
 	}
@@ -521,7 +653,7 @@ if (GUI.Button( Rect(200,000,100,30), "Perlin Noise") ) {
 	if (GUI.Button( Rect(100,500,100,30), "Save Rules") ) {
 		var myName : MapGenSet = new MapGenSet();
 		
-		myName.description 	= "Our first Quest";
+		myName.description 	= cDescription;
 		myName.iD			= "Wall";
 		myName.rule = new String[MC.algoList.Count];
 		for (var i : int = 0; i < MC.algoList.Count; i++) {
@@ -534,7 +666,17 @@ if (GUI.Button( Rect(200,000,100,30), "Perlin Noise") ) {
 		//statusText = path;
 		MC.container.Save(MC.path) ;   //Application.persistentDataPath
 	}
+	
+	// status text
+	sText = "";
+	if (MC.useMask) sText += "Use Mask : true"; else sText += "Use Mask : false";
+	if (MC.copyAll) sText += "\nCopy All : true"; else sText += "\nCopy All : false";
+	sText += "\nMap used : " + MC.map2use;
+	sText += "\nGenerationTime : "+MC.timeForGeneration;
+	GUI.Label (Rect (325, 525, 200, 90), sText);
 }
+
+private var sText : String;
 function Start() {
 	UpdateRulesList();
 }

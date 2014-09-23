@@ -168,6 +168,29 @@ import System.IO;
 		mf.mesh.uv = uv;
 	}
 	
+	function ReMap2Detail() {
+
+		// we use the background[,] array wich holds info about used tiles and build the uvmap according to this
+		for (var y = 0; y < meshMaxY; y++) {
+			for (var x = 0; x< meshMaxX; x++) {
+				
+				
+				// we came out of the rulefind loop and assume we have the uv tileposition in foundRow and foundColumn 
+				var pos : int = y*meshMaxX + x;
+				
+				t = MD.detail[x,y]; // we get the tile info from worldmap
+				if (MD.viewMap[x,y] == 0)  t += 1000; // the FOV
+				for ( var i : int = 0; i < MD.uvInfo.Count; i++) { 
+					if (MD.uvInfo[i] == t) {uvDataPos = i; break;}
+				}
+				r = MD.uvData[uvDataPos].row;
+				c = MD.uvData[uvDataPos].column;
+				ReMapUVforTile(pos,r,c, false); 	
+			}
+		}
+		mf.mesh.uv = uv;
+	}
+	
 	function ReMap2Chars() {
 		var pos : int;
 		for (var y = 0; y < meshMaxY; y++) {

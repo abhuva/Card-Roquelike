@@ -8,6 +8,7 @@ import System.IO;
 var MD : MainData;
 
 private var uvWorld : int[,];	// a working space for the remapping of the world-map
+private var uvDetail : int[,]; // a working space for remapping the detail-map
 
 var usedRule : int;  // wich Rule we use (this is the position in the list, not the iD)
 	// a tile ruleset
@@ -15,7 +16,6 @@ var usedRule : int;  // wich Rule we use (this is the position in the list, not 
 		@XmlAttribute("description")
 		public var description 		: String;	// serves as a title and for easy editing the xml files
 		public var iD				: int;
-		
 		public var rule				: String[]; // the ruleset : W = Wall, F = Floor, X = Wildcard means either Wall or Floor , :X4 the x coord of the tile, :Y4 the y coord of the tile
 											// example rule:   WWWFFFWXX:4:3  
 	}
@@ -55,8 +55,8 @@ var usedRule : int;  // wich Rule we use (this is the position in the list, not 
  	private var currentID : int = -1;
 	private var newID : String = "0";
 		
-	public var XMLObject : TextAsset;	// incase we want to include the xml in the build we assign it to this variable in the inspector, use readNamesTxt() to initialize then
-
+	public var XMLUVRuleSet : TextAsset;	// incase we want to include the xml in the build we assign it to this variable in the inspector, use readNamesTxt() to initialize then
+	public var XMLTileRuleSet : TextAsset;
 // *****************************************************************************************************
 // Below this comes the XML handling scripts (loading, writing, getting the iD position etc..)
 // *****************************************************************************************************	
@@ -81,8 +81,8 @@ var usedRule : int;  // wich Rule we use (this is the position in the list, not 
 	}
  
 	// reads the xml defined in XMLObject, used if we want to include the xml in the build
-	function readNamesTxt () {
-		var xml : StringReader = new StringReader(XMLObject.text);
+	function readTileRuleSetsTxt () {
+		var xml : StringReader = new StringReader(XMLTileRuleSet.text);
 		container = TileRuleSetContainer.LoadFromText(xml);
 	}
  
@@ -174,8 +174,8 @@ var usedRule : int;  // wich Rule we use (this is the position in the list, not 
 	}
  
 	// reads the xml defined in XMLObject, used if we want to include the xml in the build
-	function readNamesTxtUV () {
-		var xml : StringReader = new StringReader(XMLObject.text);
+	function readUVRuleSetsTxt () {
+		var xml : StringReader = new StringReader(XMLUVRuleSet.text);
 		UVcontainer = UVRuleSetContainer.LoadFromText(xml);
 	}
  
@@ -228,6 +228,31 @@ function BuildRuleString (x : int, y : int,wall : int) : String {
 		return output;
 	}
 	
+	function BuildRuleStringDetail (x : int, y : int,wall : int) : String {
+		var output : String;
+		output = "";
+		for (var cY = -1; cY < 2; cY++) {
+			for (var cX = -1; cX < 2; cX++) {
+				// for every possible neighbour we check
+				if ( (x + cX) >= 0 && (y + cY) >= 0 ) {  		// we test if the point is within our map
+					if ( (x+cX) < MD.maxXWorld && (y+cY) < MD.maxYWorld ) {
+						// the point is within the map, so we check what tile it is
+						if ( MD.mapDetail[x+cX, y+cY] == wall ) { // we found a wall
+							output += "W";
+						} else {//if ( MD.mapWorld[x+cX,y+cY] == floor ) { // we found a Floor
+							output += "F"; 
+						}
+					} else {
+						output += "W"; // the point we test is outside the map, we assume its filled
+					}
+				} else { // the point we test is outside the map, we assume its filled
+					output += "W";
+				}
+			}
+		}
+		return output;
+	}
+	
 	// this function uses the provided rules to remap the world
 	function ReMapWorld() {
 		MD.uvInfo = new List.<int>();
@@ -239,7 +264,9 @@ function BuildRuleString (x : int, y : int,wall : int) : String {
 				var rule1 : String = BuildRuleString (x,y,MD.mapWorld[x,y]); // this gives info about neighbours now
 //!!!!!! ATTENTION
 // We need to define the usedRule here now depending on the tile we are just working on
-				usedRule = MD.mapWorld[x,y]; // its a hack for now, this needs to be reworked
+				usedRule = MD.mapWorld[x,y]; // its a hack for now, this needs to be reworked, means ID for 
+											// TileRuleSets equals the position, if we delete one the whole thing doesnt work here anymore
+											// instead search for ID (so mapWorld only stores ID, not the real position anymore
 //!!!!!! ATTENTION
 				// we cycle through the rules till we found a matching tile
 				for (var i = 0; i < container.TileRuleSets[usedRule].rule.length; i++) {
@@ -276,7 +303,45 @@ function BuildRuleString (x : int, y : int,wall : int) : String {
 			}
 		}
 	}
+
+	// this function uses the provided rules to remap the details
+	function ReMapDetail() {
+		uvDetail = new int[MD.maxXWorld,MD.maxYWorld];
+		for (var y = 0; y < MD.maxYWorld; y++) {
+			for (var x = 0; x< MD.maxXWorld; x++) {
+				var rule1 : String = BuildRuleStringDetail (x,y,MD.mapDetail[x,y]); // this gives info about neighbours now
+				usedRule = MD.mapDetail[x,y]; // its a hack for now, this needs to be reworked, means ID for 
+				for (var i = 0; i < container.TileRuleSets[usedRule].rule.length; i++) {
+					var r:String = container.TileRuleSets[usedRule].rule[i];  // we save our current rule in string r
+					var matching : boolean = true; // we assume we match
+					for (var step = 0; step < 9; step ++) {
+						if (r[step] == rule1[step] || r[step] == "*") {  // its matching, * means wildcard
+						} else {
+							matching = false; // its not matching and we change our flag for this;
+						}
+					}
+					if (matching) {  // we found it
+						var words1 : String[];
+						words1 = r.Split(":"[0]);  // we seperate the parts (rule part and position parts)
+						var foundID : int = int.Parse(words1[1]);
+						break; // we break our rulefind loop, 
+					}
+				}
+				var found : boolean = false;
+				
+				for ( i = 0; i < MD.uvInfo.Count; i++) { 
+					if (MD.uvInfo[i] == foundID) { 
+						found = true; 
+						break;
+					} 
+				}
+				if (!found) MD.uvInfo.Add(foundID);
+				uvDetail[x,y] = foundID;
+			}
+		}
+	}
 	
+			
 	function UVDataCreation() {
 		var cPos : int;
 		MD.uvData = new uvDataClass[ MD.uvInfo.Count];
@@ -349,6 +414,8 @@ function BuildRuleString (x : int, y : int,wall : int) : String {
 		// now we apply the texture to the WorldLayer GameObject
 		WorldLayerGO.renderer.material.mainTexture = atlas;
 		WorldLayerGO.renderer.material.mainTexture.filterMode = FilterMode.Point;
+		DetailLayerGO.renderer.material.mainTexture = atlas;
+		DetailLayerGO.renderer.material.mainTexture.filterMode = FilterMode.Point;
 		// and we copy the new UV-info 
 		MD.uvData = new uvDataClass[l*2];
 		for ( i = 0; i < (l*2); i++) { MD.uvData[i] = new uvDataClass();}
@@ -362,22 +429,29 @@ function BuildRuleString (x : int, y : int,wall : int) : String {
 		}
 	}
 	var WorldLayerGO : GameObject;
+	var DetailLayerGO: GameObject;
 	
 	function AtlasCreation(){
-		ReMapWorld(); // now we have the newly mapped world in uvWorld and the info about sprites in uvInfo;
+		ReMapWorld(); 
+		ReMapDetail();
 		UVDataCreation();
-		// now we have all info gathered, so we can build a new Atlas-Texture
 		AtlasTextureCreation();
 		
 		
 		for (var x = 0; x < MD.maxXWorld; x++) {
 			for (var y = 0; y < MD.maxYWorld; y++) {
 				MD.mapWorld[x,y] = uvWorld[x,y];
+				MD.mapDetail[x,y] = uvDetail[x,y];
 			}
 		}
 	}
 	
 	function Awake() {
-		readTileRuleSets();
-		readUVRuleSets();	
+		if (MD.DevVersion) {
+			readTileRuleSetsTxt();   
+			readUVRuleSetsTxt();
+		} else {
+			readTileRuleSets();
+			readUVRuleSets();	
+		}
 	}
